@@ -1,0 +1,39 @@
+.notification{
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px;
+    border-radius: 3px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.table{
+    border: 1px solid silver;
+    border-radius: 5px;
+}
+
+.search-filter-users{
+    padding: 15px 0 0 15px;
+    display: flex;
+    align-items: center;
+    gap:20px
+}
+
+.selected-wrap{
+    display: flex;
+    justify-content: space-between;
+}
+
+.selected{
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-filter-users a{
+    padding-top: 8px;
+    text-decoration: none;
+    color: #2286fb;
+}
