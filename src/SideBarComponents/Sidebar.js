@@ -23,8 +23,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Reno from "../reno-systems.png";
-import Profile from "../Profile.png";
 import moment from 'moment/moment';
+import { Avatar } from "@mui/material";
 
 const drawerWidth = 250;
 const data = [{ label: "Users" }, { label: "Profiles" }, { label: "Group" }];
@@ -76,6 +76,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Sidebar(props) {
   const [open, setOpen] = React.useState(false);
   const [list1, setOpenList1] = React.useState(false);
+  const [active, setActive] = React.useState(false);
+
 
   const handleDrawerOpen = () => {
     setOpen(!open);
@@ -85,6 +87,7 @@ export default function Sidebar(props) {
     setOpen(false);
   };
   const handleList1Open = () => {
+    setActive(!active);
     setOpenList1(!list1);
   };
 
@@ -137,11 +140,7 @@ export default function Sidebar(props) {
                 >
                   Nader Amer
                 </span>
-                <img
-                  src={Profile}
-                  alt="Profile"
-                  style={{ border: "0", borderRadius: "20px", height: "24px" }}
-                />
+                <Avatar sx={{height:30, width:30,fontSize:"14px"}}>NA</Avatar>
                 <IconButton>
                   <ExpandMore />
                 </IconButton>
@@ -212,7 +211,7 @@ export default function Sidebar(props) {
             <ExpandMore />
           </ListItemButton>
 
-          <ListItemButton onClick={handleList1Open}>
+          <ListItemButton onClick={handleList1Open}  sx={{ bgcolor: active ? "#1a8b56":"#050e2d", color:active?"#fff":"#888"}}>
             <ListItemText primary="User Management" />
             {list1 ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
@@ -220,18 +219,22 @@ export default function Sidebar(props) {
           {list1 &&
             data.map((item) => (
               <ListItemButton
+                
                 key={item.label}
-                sx={{
+                sx={{ 
+                  borderLeft:1,
+                  borderColor: '#888',
+                  bgcolor:'#2a324c',
                   py: 0,
                   px: "2em",
-                  minHeight: 32,
+                  minHeight: 50,
                   color: "rgba(255,255,255,.8)",
                 }}
               >
                 <ListItemText
                   primary={item.label}
                   primaryTypographyProps={{
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: "medium",
                   }}
                 />

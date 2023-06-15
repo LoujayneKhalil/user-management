@@ -47,16 +47,6 @@ export default function NewUserButton({
     handleToggle();
     handleEditMode();
     addNew(userInput)
-    let data = JSON.parse(localStorage.getItem("data"));
-
-    if (data == null) {
-      localStorage.setItem("data", JSON.stringify(rows));
-    }
-
-    var old_data = JSON.parse(localStorage.getItem("data"));
-    old_data.push({ id: rows.length + 1, userInput });
-
-    localStorage.setItem("data", JSON.stringify(old_data));
   };
 
   const handleEdit = () => {
@@ -90,10 +80,8 @@ export default function NewUserButton({
   React.useEffect(
     () => {
       setEditModel();
-      localStorage.setItem("data", JSON.stringify(rows));
     },
     [editRow],
-    [rows]
   );
 
   return (

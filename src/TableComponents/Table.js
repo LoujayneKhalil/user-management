@@ -2,7 +2,7 @@ import * as React from "react";
 import "../TableComponents/Table.css";
 import { DataGrid } from "@mui/x-data-grid";
 import NewUserButton from "./NewUserButton";
-import { IconButton, TextField } from "@mui/material";
+import { Avatar, IconButton, TextField ,Stack, Typography} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import DatePickerCalender from "./DatePickerCalender";
@@ -25,8 +25,17 @@ const iconStyle = {
   p: "5px",
 };
 
+
 const columns = [
-  { field: "fullName", headerName: "Name", width: 160 },
+  { field: "fullName", headerName: "Name", width: 200 ,renderCell:(param)=>{
+    const initials = param.row.fullName.split(" ");
+    return(
+      <Stack  direction={"row"} gap={1} alignItems={"center"}>
+        <Avatar sx={{ width: 30, height: 30, fontSize:"14px"}}>{initials.map((initials)=>initials[0]).join("")}</Avatar>
+        <Typography>{param.row.fullName}</Typography>
+      </Stack>
+    )
+  }},
   { field: "userName", headerName: "User Name", width: 200 },
   { field: "email", headerName: "Email Address", width: 250 },
   { field: "userGroup", headerName: "Group", width: 200 },
@@ -72,7 +81,11 @@ export default function Table() {
   const [AddButtonDisplay, setAddDisplay] = React.useState(true);
   const [EditMode, setEditMode] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
+  const [userToDelete, setUserToDelete] = React.useState([]);
 
+  
+
+  
 
   React.useEffect(() => {
     filterFullNameInput(searchValue);
@@ -82,7 +95,9 @@ export default function Table() {
     if (filter === "") {
       setRows(row);
     } else {
-      let dataRow = row.filter((user) => user.fullName.toLowerCase().includes(filter))
+      let dataRow = row.filter((user) =>
+        user.fullName.toLowerCase().includes(filter)
+      );
       setRows(dataRow);
     }
   };
@@ -91,23 +106,41 @@ export default function Table() {
 
   const addNew = (newEntry) => {
     let newnewEntry = { id: rows.length + 1, ...newEntry };
-    return setRows([...rows, newnewEntry]); 
+    return setRows([...rows, newnewEntry]);
   };
-
 
   const editUser = (e) => {
     setCurrentRow(e.row);
     handleToggle();
     handleAddDisplay(false);
-    setEditMode(true)
+    setEditMode(true);
   };
 
-  const handleEditMode= ()=>{
-    setEditMode(false)
-  }
+  const handleEditMode = () => {
+    setEditMode(false);
+  };
 
   const handleAddDisplay = (e) => {
     setAddDisplay(e);
+  };
+
+  const deleteRows = (index) => {
+    setUserToDelete(index);
+  };
+
+  const countSelectedRows = () =>{
+    const arr = rows;
+    const newArr = arr.filter((obj) => userToDelete.includes(obj.id));
+    return (
+      <span> {newArr.length}</span>
+    )
+  }
+
+
+  const deleteButton = () => {
+    const arr = rows;
+   const newArr = arr.filter((obj) => !userToDelete.includes(obj.id));
+    setRows(newArr);
   };
 
   const modifyRow = (newData, oldData) => {
@@ -184,12 +217,12 @@ export default function Table() {
                   marginRight: "10px",
                 }}
               >
-                <span>1 </span>selected
+                <span>{countSelectedRows()} </span>selected
               </p>
               <IconButton sx={{ p: 0 }}>
                 <EditIcon sx={iconStyle} />
               </IconButton>
-              <IconButton sx={{ p: 0 }}>
+              <IconButton sx={{ p: 0 }} onClick={deleteButton}>
                 <DoDisturbAltIcon sx={iconStyle} />
               </IconButton>
               <IconButton sx={{ p: 0 }}>
@@ -214,6 +247,7 @@ export default function Table() {
             borderLeft: 0,
             borderRight: 0,
           }}
+          onRowSelectionModelChange={deleteRows}
           rows={rows}
           columns={columns}
           initialState={{
@@ -224,6 +258,7 @@ export default function Table() {
           pageSizeOptions={[5, 10]}
           onRowClick={editUser}
           checkboxSelection
+          countSelectedRows={false}
         />
       </div>
     </div>
