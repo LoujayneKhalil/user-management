@@ -24,17 +24,9 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Reno from "../reno-systems.png";
 import Profile from "../Profile.png";
+import moment from 'moment/moment';
 
 const drawerWidth = 250;
-
-if(Date() > '12'){
-  var dateDisplay = ` ${Date().substring(0, 21)} PM`
-  
-    
-}else{
-  dateDisplay = ` ${Date().substring(0, 21)} AM`
-}
-
 const data = [{ label: "Users" }, { label: "Profiles" }, { label: "Group" }];
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -127,15 +119,7 @@ export default function Sidebar(props) {
             >
               <div>
                 <h4>
-                  Good Morning!{" "}
-                  <span
-                    style={{
-                      fontWeight: "400",
-                      fontSize: "16px",
-                    }}
-                  >
-                    {dateDisplay}
-                  </span>{" "}
+                  Good Morning! <span style={{color:'#888',}}>{moment().format("ddd MMM DD, YYYY LT")}</span>
                 </h4>
               </div>
               <div

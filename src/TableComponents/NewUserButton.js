@@ -4,8 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import "../TableComponents/Table.css";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
-import Select from "react-select";
-import { Divider } from "@mui/material";
+import { Divider, MenuItem, Select } from "@mui/material";
 
 const Pointer = {
   cursor: "pointer",
@@ -20,20 +19,9 @@ export default function NewUserButton({
   handleAddDisplay,
   AddButtonDisplay,
   rows,
+  handleEditMode,
 }) {
-  const [selectedOption, setSelectedOption] = React.useState(null);
-  const [selectedProfileOption, setSelectedProfile] = React.useState(null);
 
-  const groupList = [
-    { value: "office", label: "Office" },
-    { value: "headOffice", label: "Head Office" },
-    { value: "managers", label: "Managers" },
-  ];
-  const profiles = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "locked", label: "Locked" },
-  ];
 
   const setEditModel = () => {
     if (editRow !== {}) {
@@ -47,30 +35,28 @@ export default function NewUserButton({
     userName: "",
     email: "",
     userGroup: "",
-    userProfile: "",
+    userProfile: "option",
     createdOn: Date().substring(3, 16),
   });
+  React.useEffect(() => {
+     setUserInput({...userInput,userProfile:"none",userGroup:'none'})
+  },[modalValue])
+
 
   const handleSubmitClick = () => {
     handleToggle();
-    setUserInput((currentUser) => {
-      addNew({
-        ...currentUser,
-        userGroup: selectedOption,
-        userProfile: selectedProfileOption,
-      });
-      return {
-        ...currentUser,
-        userGroup: selectedOption,
-        userProfile: selectedProfileOption,
-      };
-    });
-    const data = JSON.parse(localStorage.getItem('data'));
+    handleEditMode();
+    addNew(userInput)
+    let data = JSON.parse(localStorage.getItem("data"));
+
     if (data == null) {
-      localStorage.setItem('data', JSON.stringify(rows));
-    } else {
-      localStorage.setItem('data', JSON.stringify([...rows, userInput]));
+      localStorage.setItem("data", JSON.stringify(rows));
     }
+
+    var old_data = JSON.parse(localStorage.getItem("data"));
+    old_data.push({ id: rows.length + 1, userInput });
+
+    localStorage.setItem("data", JSON.stringify(old_data));
   };
 
   const handleEdit = () => {
@@ -101,10 +87,14 @@ export default function NewUserButton({
     });
   };
 
-  React.useEffect(() => {
-    setEditModel();
-    localStorage.setItem("data", JSON.stringify(rows));
-  }, [editRow],[rows]);
+  React.useEffect(
+    () => {
+      setEditModel();
+      localStorage.setItem("data", JSON.stringify(rows));
+    },
+    [editRow],
+    [rows]
+  );
 
   return (
     <div>
@@ -171,20 +161,36 @@ export default function NewUserButton({
               <label>User Group</label>
               <Select
                 sx={{ my: "5px" }}
+                value={userInput.userGroup}
                 className="select-items"
-                placeholder="Choose User Group"
-                onChange={(e) => setSelectedOption(e.label)}
-                options={groupList}
-                id="1"
-              />
+                onChange={(e) =>
+                  setUserInput({ ...userInput, userGroup: e.target.value })
+                }
+              >
+                <MenuItem disabled value='none'>
+                  Choose User Group
+                </MenuItem>
+                <MenuItem value="Head Office">Head Office</MenuItem>
+                <MenuItem value="Office">Office</MenuItem>
+                <MenuItem value="Managers">Managers</MenuItem>
+
+              </Select>
               <label>Assign Profile</label>
               <Select
                 className="select-items"
-                placeholder="Choose Profile"
-                onChange={(e) => setSelectedProfile(e.label)}
-                options={profiles}
-                id="2"
-              />
+                value={userInput.userProfile}
+                defaultValue="none"
+                onChange={(e) =>
+                  setUserInput({ ...userInput, userProfile: e.target.value })
+                }
+              >
+                <MenuItem disabled value='none'>
+                  Choose Profile
+                </MenuItem>
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="Inactive">Inactive</MenuItem>
+                <MenuItem value="Locked">Locked</MenuItem>
+              </Select>
               <Divider />
               <div className="add-user-submission">
                 <a href="#clear" onClick={handleClear}>

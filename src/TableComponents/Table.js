@@ -28,7 +28,7 @@ const iconStyle = {
 const columns = [
   { field: "fullName", headerName: "Name", width: 160 },
   { field: "userName", headerName: "User Name", width: 200 },
-  { field: "email", headerName: "Email Address", width: 200 },
+  { field: "email", headerName: "Email Address", width: 250 },
   { field: "userGroup", headerName: "Group", width: 200 },
   { field: "userProfile", headerName: "Status", width: 150 },
   { field: "createdOn", headerName: "Created on", width: 200 },
@@ -70,7 +70,9 @@ export default function Table() {
   const [currentRowData, setCurrentRow] = React.useState({});
   const [open, setOpen] = React.useState(true);
   const [AddButtonDisplay, setAddDisplay] = React.useState(true);
+  const [EditMode, setEditMode] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
+
 
   React.useEffect(() => {
     filterFullNameInput(searchValue);
@@ -92,11 +94,17 @@ export default function Table() {
     return setRows([...rows, newnewEntry]); 
   };
 
+
   const editUser = (e) => {
     setCurrentRow(e.row);
     handleToggle();
     handleAddDisplay(false);
+    setEditMode(true)
   };
+
+  const handleEditMode= ()=>{
+    setEditMode(false)
+  }
 
   const handleAddDisplay = (e) => {
     setAddDisplay(e);
@@ -122,6 +130,7 @@ export default function Table() {
           handleAddDisplay={handleAddDisplay}
           AddButtonDisplay={AddButtonDisplay}
           rows={rows}
+          handleEditMode={handleEditMode}
         />
       </div>
       <div className="table">
