@@ -26,6 +26,7 @@ const iconStyle = {
 };
 
 
+
 const columns = [
   { field: "fullName", headerName: "Name", width: 200 ,renderCell:(param)=>{
     const initials = param.row.fullName.split(" ");
@@ -73,6 +74,7 @@ let row = [
   },
 ];
 
+
 export default function Table() {
   const [status, setStatus] = React.useState("");
   const [rows, setRows] = React.useState(row);
@@ -106,6 +108,7 @@ export default function Table() {
 
   const addNew = (newEntry) => {
     let newnewEntry = { id: rows.length + 1, ...newEntry };
+    row = [...rows, newnewEntry]
     return setRows([...rows, newnewEntry]);
   };
 
